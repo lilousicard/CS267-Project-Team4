@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import json
 
 # Replace the following variables with your specific information
-uri = "mongodb+srv://lilousicardnoel:XqU39QzO0LbKab9G@cluster0.figrf53.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0"
+uri = ""
 database_name = "newsArticle"
 collection_name = "articles"
 json_file_path = "parsed_articles2.json"
