@@ -8,7 +8,7 @@ def parse_document(file_path):
     with open(file_path, 'r', encoding='utf-8') as file:
         content = file.read()
 
-    # Define a pattern to split the document into articles. This example uses asterisks as a separator.
+    # Define a pattern to split the document into articles.
     articles_content = content.split('**************************************************')
 
     # Define regular expressions for extracting different parts of each article
