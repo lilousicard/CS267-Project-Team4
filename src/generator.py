@@ -1,7 +1,17 @@
 from openai import OpenAI
+from mongo_utils import get_mongo_client
 
 # Initialize the OpenAI client
 client = OpenAI()
+
+# Initialize the MongoDB Atlas Connection
+username = 'lilousicardnoel'
+cluster_url = 'cluster0.figrf53.mongodb.net'
+db_name = 'newsArticle'
+
+mongo_client = get_mongo_client(username, cluster_url, db_name)
+db = mongo_client[db_name]
+collection = db['topicsForAI']
 
 def generate_article(topic):
     message_content = f"""
@@ -15,7 +25,7 @@ def generate_article(topic):
         """
 
     completion = client.chat.completions.create(
-        model="gpt-4-0125-preview",
+        model="gpt-3.5-turbo",
         messages=[
             {"role": "system", "content": message_content.strip()},
             {"role": "user", "content": topic}
@@ -29,17 +39,23 @@ def save_article(topic, article_content):
         file.write(article_content)
         file.write("\n************************\n")
 
-def main():
-    topics = [
-        "September 11th attacks",
-        "Obama's election as President",
-        "Ruth Bader Ginsburg's death"
-    ]
+def retrive_topic():
+    lines = []
+    query = {}
+    for doc in collection.find(query):
+        if 'line' in doc:
+            lines.append(doc['line'])
+    return lines
 
+def main():
+    topics = retrive_topic()
+    count = 0
     for topic in topics:
-        article_content = generate_article(topic)
-        save_article(topic, article_content)
+        #article_content = generate_article(topic)
+        #save_article(topic, article_content)
         print(f"Article on '{topic}' saved to file.")
+        count += 1
+    print("total: "+ str(count))
 
 if __name__ == '__main__':
     main()
